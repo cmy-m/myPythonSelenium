@@ -1,0 +1,66 @@
+# myPythonSelenium
+闲来没事练习一下selenium
+
+
+
+使用方法：
+1、在selenium_case.xlsx内按格式编写测试用例
+2、在selenium_m/config/selenium_webdriver_config.ini内配置使用的浏览器及对应的webDriver路径
+3、在pytest.ini中配置执行命令
+3、执行run.py
+
+
+conftest.py：
+用于封装前后置条件，封装可以修改测试报告的钩子函数
+
+pytest.ini：
+文件用于配置pytest运行时的cmd命令
+
+environment.properties：
+文件用于配置allure测试报告中测试环境模块
+使用方式需要将文件放到allure生成的测试报告目录
+os.system(r"cp environment.properties ./allure-results/environment.properties")
+
+base_browser.py：
+文件封装webDriver类，默认chrome，浏览器有chrome、safari、IE等，可进行扩展
+
+config/selenium_webdriver_config.ini
+文件用于配置webDriver信息，wd的驱动地址，版本号等
+
+base_driver.py:
+文件封装浏览器类，封装对浏览器的各种操作，如元素查找、点击、滑动等
+
+constant.py:
+文件定义selenium框架中的常量
+
+r_w_file.SeleniumCaseFile.read_selenium_case_excel()
+用于读取Excel测试用例，其他格式可以进行扩展
+
+Excel用例参数说明：
+url：配置浏览器启动的页面
+case_name：用例名称
+element_type：需要查找的对象属性类型，id\name\classname\xpath\css,查找多个加_s(id_s)
+element_value：需要查找的对象属性值，格式参考符合selenium要求
+element_action：需要对对象的操作（可扩展）
+    send_keys：发送数据
+    click：点击
+    to_window：进入最新的页面
+    to_bottom：滚动到页面底部
+    to_top：滚动到页面顶部
+    to_alter：处理页面alter类型弹窗(data中如果为空或者dismiss表示直接关闭alter弹窗，accept表示直接点击确认，其他内容表示alter弹窗输入内容后点击确认)
+    alter_txt：获取alter弹窗内的文本内容
+data：用于配置element_action操作需要的数据，如send_keys需要发送的内容，
+assert：进行断言的数据
+skip：是否跳过该条用例，0不跳过，1跳过
+
+
+categories.json：
+文件用于配置allure测试报告中类别模块
+使用方式需要将文件放到allure生成的测试报告目录
+os.system(r"cp categories.json ./allure-results/categories.json")
+categories.json文件内容格式说明 [
+      "该文件参数说明：",
+      "name：分类名称",
+      "matchedStatuses：测试用例的运行状态，默认[\"failed\", \"broken\", \"passed\", \"skipped\", \"unknown\"]",
+      "messageRegex：测试用例运行的错误信息，默认是 .* ，通过正则去匹配\ntraceRegex：测试用例运行的错误堆栈信息，默认是 .* ，同样通过正则去匹配"
+    ],
